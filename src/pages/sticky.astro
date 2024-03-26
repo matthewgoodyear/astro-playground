@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base>
+  <div class="wrapper">
+    <h1>Sticky Button</h1>
+
+    <div class="cluster align-center">
+      <div class="btn-container">
+        <div class="bounds"></div>
+        <div class="btn"></div>
+      </div>
+  
+      <div class="btn-container">
+        <div class="bounds"></div>
+        <div class="btn"></div>
+      </div>
+      
+      <div class="btn-container">
+        <div class="bounds"></div>
+        <div class="btn"></div>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .cluster {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+  }
+
+  .btn-container {
+    position: relative;
+    display: inline-block; /* Ensure the btn-container only takes the necessary space */
+  }
+
+  .btn-container:hover,
+  .bounds:hover {
+    cursor: none;
+  }
+
+  .btn-container:hover > .btn {
+    background-color: #007bff;
+  }
+  
+  .bounds {
+    position: absolute;
+    /* top: 50%;
+    left: 50%; */
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    transform: scale(1.3);
+    /* border: red solid 1px; */
+  }
+
+  .btn-container:hover > .bounds {
+    transform: scale(2);
+    top: 0;
+    left: 0;
+  }
+  
+  .btn {
+    width: 100px;
+    height: 40px;
+    border-radius: 0.2rem;
+    background-color: #eaeaea;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease; /* Reduced transition duration for smoother movement */
+  }
+</style>
+
+<script>
+  // Variables
+  const boundsScale = 2; // Scale factor for bounds on hover
+  const btnScale = 1.05; // Scale factor for btn on hover
+  const cursorSpeedMultiplier = 0.2; // Multiplier for cursor speed (adjust as needed)
+  
+  // Get all btn elements
+  const btnContainers = document.querySelectorAll('.btn-container');
+  
+  // Iterate over each menu element
+  btnContainers.forEach(btnContainer => {
+    const bounds = btnContainer.querySelector('.bounds') as HTMLElement;
+    const btn = btnContainer.querySelector('.btn') as HTMLElement;
+  
+    // Set initial size of the menu based on the btn
+    (btnContainer as HTMLElement).style.width = btn.offsetWidth + 'px';
+    (btnContainer as HTMLElement).style.height = btn.offsetHeight + 'px';
+  
+    btnContainer.addEventListener('mousemove', (e : MouseEvent) => {
+      const rect = bounds.getBoundingClientRect(); // Get bounds' position relative to the viewport
+      const boundsCenterX = rect.left + rect.width / 2; // Calculate bounds' center X position
+      const boundsCenterY = rect.top + rect.height / 2; // Calculate bounds' center Y position
+  
+      const cursorX = e.clientX; // Get cursor's X position
+      const cursorY = e.clientY; // Get cursor's Y position
+  
+      const offsetX = (cursorX - boundsCenterX) * cursorSpeedMultiplier; // Calculate cursor's offset from bounds' center along X axis with multiplier
+      const offsetY = (cursorY - boundsCenterY) * cursorSpeedMultiplier; // Calculate cursor's offset from bounds' center along Y axis with multiplier
+  
+      const maxOffsetX = (bounds.offsetWidth * boundsScale - btn.offsetWidth) / 2; // Calculate maximum offset along X axis (considering scale)
+      const maxOffsetY = (bounds.offsetHeight * boundsScale - btn.offsetHeight) / 2; // Calculate maximum offset along Y axis (considering scale)
+  
+      const clampedOffsetX = Math.min(Math.max(offsetX, -maxOffsetX), maxOffsetX); // Clamp offset along X axis
+      const clampedOffsetY = Math.min(Math.max(offsetY, -maxOffsetY), maxOffsetY); // Clamp offset along Y axis
+  
+      btn.style.transform = `translate(-50%, -50%) translate(${clampedOffsetX}px, ${clampedOffsetY}px) scale(${btnScale})`;
+    });
+  
+    btnContainer.addEventListener('mouseleave', () => {
+      btn.style.transform = `translate(-50%, -50%) scale(1)`;
+    });
+  });
+</script>

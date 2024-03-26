@@ -1,0 +1,108 @@
+---
+
+---
+
+<div class="menu">
+  <div class="circle">
+
+  </div>
+</div>
+
+
+<style>
+  .cluster {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .menu {
+    position: relative;
+    display: inline-block; /* Ensure the menu container only takes the necessary space */
+  }
+
+  .menu:hover {
+    cursor: none;
+  }
+
+  .menu:hover > .circle {
+    background-color: #007bff;
+    cursor: none;
+  }
+  
+  .bounds {
+    position: absolute;
+    /* top: 50%;
+    left: 50%; */
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    transform: scale(1.3);
+    /* border: red solid 1px; */
+  }
+
+  .menu:hover > .bounds {
+    transform: scale(1.8);
+    top: 0;
+    left: 0;
+    cursor: none;
+  }
+  
+  .circle {
+    width: 100px;
+    height: 40px;
+    border-radius: 0.2rem;
+    /* background-color: #eaeaea; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.1s ease; /* Reduced transition duration for smoother movement */
+  }
+</style>
+
+<script>
+  // Variables
+  const boundsScale = 1.15; // Scale factor for bounds on hover
+  const circleScale = 1.15; // Scale factor for circle on hover
+  const cursorSpeedMultiplier = 0.2; // Multiplier for cursor speed (adjust as needed)
+  
+  // Get all menu elements
+  const menus = document.querySelectorAll('.menu');
+  
+  // Iterate over each menu element
+  menus.forEach(menu => {
+    const bounds = menu.querySelector('.bounds') as HTMLElement;
+    const circle = menu.querySelector('.circle') as HTMLElement;
+  
+    // Set initial size of the menu based on the circle
+    (menu as HTMLElement).style.width = circle.offsetWidth + 'px';
+    (menu as HTMLElement).style.height = circle.offsetHeight + 'px';
+  
+    menu.addEventListener('mousemove', (e : MouseEvent) => {
+      const rect = bounds.getBoundingClientRect(); // Get bounds' position relative to the viewport
+      const boundsCenterX = rect.left + rect.width / 2; // Calculate bounds' center X position
+      const boundsCenterY = rect.top + rect.height / 2; // Calculate bounds' center Y position
+  
+      const cursorX = e.clientX; // Get cursor's X position
+      const cursorY = e.clientY; // Get cursor's Y position
+  
+      const offsetX = (cursorX - boundsCenterX) * cursorSpeedMultiplier; // Calculate cursor's offset from bounds' center along X axis with multiplier
+      const offsetY = (cursorY - boundsCenterY) * cursorSpeedMultiplier; // Calculate cursor's offset from bounds' center along Y axis with multiplier
+  
+      const maxOffsetX = (bounds.offsetWidth * boundsScale - circle.offsetWidth) / 2; // Calculate maximum offset along X axis (considering scale)
+      const maxOffsetY = (bounds.offsetHeight * boundsScale - circle.offsetHeight) / 2; // Calculate maximum offset along Y axis (considering scale)
+  
+      const clampedOffsetX = Math.min(Math.max(offsetX, -maxOffsetX), maxOffsetX); // Clamp offset along X axis
+      const clampedOffsetY = Math.min(Math.max(offsetY, -maxOffsetY), maxOffsetY); // Clamp offset along Y axis
+  
+      circle.style.transform = `translate(-50%, -50%) translate(${clampedOffsetX}px, ${clampedOffsetY}px) scale(${circleScale})`;
+    });
+  
+    menu.addEventListener('mouseleave', () => {
+      circle.style.transform = `translate(-50%, -50%) scale(1)`;
+    });
+  });
+</script>

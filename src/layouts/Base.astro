@@ -1,0 +1,183 @@
+---
+import '../styles/global.css';
+
+const currentPath = Astro.url.pathname;
+
+const menu = [
+  {
+    link: "/",
+    name: "Home"
+  },
+  {
+    link: "/sticky",
+    name: "Sticky Button"
+  },
+  {
+    link: "/imgzoom",
+    name: "Image Zoom"
+  },
+  {
+    link: "/stack",
+    name: "Card Stack"
+  }
+]
+
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Playground</title>
+  </head>
+  
+  <body>
+    <div class="inner">
+
+      <div class="page">
+        <div class="wrapper"> 
+          <header>
+
+            {menu.map((item) => ( 
+              <a href={item.link}
+                 class={currentPath === item.link ? "link active" : "link"}>
+                {item.name}
+              </a>
+            ))}
+          </header>
+        </div>
+
+        <slot />
+       
+      </div>
+
+    </div>
+
+    <div class="slider"></div>
+  </body>
+</html>
+
+<script>
+  import { animate } from 'motion';
+
+  const links = document.querySelectorAll(".link");
+  const inner = document.querySelector('.inner');
+  const slider = document.querySelector('.slider');
+  const page = document.querySelector('.page');
+  const transitionDuration = 0.6;
+
+  animate(inner, 
+    {
+      opacity: [0, 1],
+      y: [50, 0]
+    },
+    {
+      duration: transitionDuration,
+      easing: [.88, .16, .15, .86]
+    }
+  )
+
+  document.addEventListener("DOMContentLoaded", () => {
+    links.forEach(function(link) {
+      link.addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent the default behavior of the anchor tag
+
+        // Store the href attribute value
+        var href = this.getAttribute("href");
+
+        // Trigger animation functon
+        transitionOut(href);
+      });
+    });
+  });
+
+  function transitionOut(href) {
+    // Motion One animations here
+    animate(slider, 
+      {
+        top: "0"
+      },
+      {
+        duration: transitionDuration,
+        easing: [.88, .16, .15, .86]
+      })
+
+    animate(page, 
+      {
+        y: -200,
+        scale: 0.9,
+        opacity: 0.2
+      }, 
+      { 
+        duration: transitionDuration * 1.5,
+      }
+    )
+
+    setTimeout(() => {
+      window.location.href = href;
+    }, (transitionDuration * 1000) * 1.05 );
+  }
+
+  // Smooth scroll
+  import Lenis from '@studio-freight/lenis';
+
+  const lenis = new Lenis({ 
+    lerp: 0.12 // Constrols the intensity
+    // duration: 4
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+
+  requestAnimationFrame(raf);
+
+</script>
+
+<style>
+  /* Smooth scroll set up */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
+  }
+
+  /* Page transition set up */
+  .inner {
+    background-color: black;
+    display: flex;
+    min-height: 100vh;
+    opacity: 0;
+  }
+
+  .page {
+    background-color: white;
+    width: 100%;
+  }
+
+  .slider {
+    background-color: white;
+    position: fixed;
+    top: 100vh;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+  }
+</style>

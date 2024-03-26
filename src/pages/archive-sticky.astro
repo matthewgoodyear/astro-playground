@@ -1,0 +1,64 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base>
+  <div class="wrapper">
+    <div class="menu">
+      <div class="circle"></div>
+    </div>
+  </div>
+</Base>
+
+
+<style>
+  .menu {
+    position: relative;
+    display: inline-block;
+    width: 200px; /* Increased width for the bounding box */
+    height: 80px; /* Increased height for the bounding box */
+    background-color: #f0f0f0;
+  }
+  
+  .circle {
+    width: 160px;
+    height: 60px;
+    border-radius: 0.2rem;
+    background-color: #007bff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease; /* Reduced transition duration for smoother movement */
+  }
+</style>
+
+<script>
+  // Get elements
+  const menu = document.querySelector('.menu');
+  const circle = document.querySelector('.circle');
+  
+  menu.addEventListener('mousemove', (e) => {
+    const rect = menu.getBoundingClientRect(); // Get menu's position relative to the viewport
+    const menuCenterX = rect.left + rect.width / 2; // Calculate menu's center X position
+    const menuCenterY = rect.top + rect.height / 2; // Calculate menu's center Y position
+  
+    const cursorX = e.clientX; // Get cursor's X position
+    const cursorY = e.clientY; // Get cursor's Y position
+  
+    const offsetX = cursorX - menuCenterX; // Calculate cursor's offset from menu's center along X axis
+    const offsetY = cursorY - menuCenterY; // Calculate cursor's offset from menu's center along Y axis
+  
+    const maxOffsetX = (menu.offsetWidth - circle.offsetWidth) / 2; // Calculate maximum offset along X axis
+    const maxOffsetY = (menu.offsetHeight - circle.offsetHeight) / 2; // Calculate maximum offset along Y axis
+  
+    const clampedOffsetX = Math.min(Math.max(offsetX, -maxOffsetX), maxOffsetX); // Clamp offset along X axis
+    const clampedOffsetY = Math.min(Math.max(offsetY, -maxOffsetY), maxOffsetY); // Clamp offset along Y axis
+  
+    circle.style.transform = `translate(-50%, -50%) translate(${clampedOffsetX}px, ${clampedOffsetY}px) scale(1.2)`;
+  });
+  
+  menu.addEventListener('mouseleave', () => {
+    circle.style.transform = `translate(-50%, -50%) scale(1)`;
+  });
+  </script>
+  

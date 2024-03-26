@@ -1,0 +1,82 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base>
+  <div class="wrapper">
+    <div class="menu">
+      <div class="bounds"></div>
+      <div class="circle"></div>
+    </div>
+  </div>
+</Base>
+
+
+<style>
+  .menu {
+    position: relative;
+    width: 220px; /* Adjusted width for the circle size */
+    height: 100px; /* Adjusted height for the circle size */
+  }
+  
+  .bounds {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border: 1px solid black; /* Added border for visibility */
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease-out; /* Add transition for smooth scaling */
+  }
+  
+  .menu:hover .bounds {
+    transform: translate(-50%, -50%) scale(1.1); /* Scale up bounds on hover */
+  }
+  
+  .circle {
+    width: 180px;
+    height: 80px;
+    border-radius: 1rem;
+    background-color: #007bff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s ease-out; /* Reduced transition duration for smoother movement */
+  }
+</style>
+
+<script>
+  // Variables
+  const boundsScale = 1.2; // Scale factor for bounds on hover
+  const circleScale = 1; // Scale factor for circle on hover
+  
+  // Get elements
+  const menu = document.querySelector('.menu');
+  const bounds = document.querySelector('.bounds');
+  const circle = document.querySelector('.circle');
+  
+  menu.addEventListener('mousemove', (e) => {
+    const rect = bounds.getBoundingClientRect(); // Get bounds' position relative to the viewport
+    const boundsCenterX = rect.left + rect.width / 2; // Calculate bounds' center X position
+    const boundsCenterY = rect.top + rect.height / 2; // Calculate bounds' center Y position
+  
+    const cursorX = e.clientX; // Get cursor's X position
+    const cursorY = e.clientY; // Get cursor's Y position
+  
+    const offsetX = cursorX - boundsCenterX; // Calculate cursor's offset from bounds' center along X axis
+    const offsetY = cursorY - boundsCenterY; // Calculate cursor's offset from bounds' center along Y axis
+  
+    const maxOffsetX = (bounds.offsetWidth * boundsScale - circle.offsetWidth) / 2; // Calculate maximum offset along X axis (considering scale)
+    const maxOffsetY = (bounds.offsetHeight * boundsScale - circle.offsetHeight) / 2; // Calculate maximum offset along Y axis (considering scale)
+  
+    const clampedOffsetX = Math.min(Math.max(offsetX, -maxOffsetX), maxOffsetX); // Clamp offset along X axis
+    const clampedOffsetY = Math.min(Math.max(offsetY, -maxOffsetY), maxOffsetY); // Clamp offset along Y axis
+  
+    circle.style.transform = `translate(-50%, -50%) translate(${clampedOffsetX}px, ${clampedOffsetY}px) scale(${circleScale})`;
+  });
+  
+  menu.addEventListener('mouseleave', () => {
+    circle.style.transform = `translate(-50%, -50%) scale(1)`;
+  });
+  </script>
