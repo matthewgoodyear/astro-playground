@@ -19,6 +19,10 @@ const menu = [
   {
     link: "/astro-playground/stack",
     name: "Card Stack"
+  },
+  {
+    link: "/astro-playground/text",
+    name: "Text"
   }
 ]
 
@@ -26,7 +30,7 @@ const menu = [
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/astro-playground/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>Playground</title>
@@ -38,9 +42,8 @@ const menu = [
       <div class="page">
         <div class="wrapper"> 
           <header>
-
             {menu.map((item) => ( 
-              <a href={item.link}
+              <a href={item.link} data-astro-prefetch
                  class={currentPath === item.link ? "link active" : "link"}>
                 {item.name}
               </a>
@@ -60,66 +63,6 @@ const menu = [
 
 <script>
   import { animate } from 'motion';
-
-  const links = document.querySelectorAll(".link");
-  const inner = document.querySelector('.inner');
-  const slider = document.querySelector('.slider');
-  const page = document.querySelector('.page');
-  const transitionDuration = 0.6;
-
-  animate(inner, 
-    {
-      opacity: [0, 1],
-      y: [50, 0]
-    },
-    {
-      duration: transitionDuration,
-      easing: [.88, .16, .15, .86]
-    }
-  )
-
-  document.addEventListener("DOMContentLoaded", () => {
-    links.forEach(function(link) {
-      link.addEventListener("click", function(event) {
-        event.preventDefault(); // Prevent the default behavior of the anchor tag
-
-        // Store the href attribute value
-        var href = this.getAttribute("href");
-
-        // Trigger animation functon
-        transitionOut(href);
-      });
-    });
-  });
-
-  function transitionOut(href) {
-    // Motion One animations here
-    animate(slider, 
-      {
-        top: "0"
-      },
-      {
-        duration: transitionDuration,
-        easing: [.88, .16, .15, .86]
-      })
-
-    animate(page, 
-      {
-        y: -200,
-        scale: 0.9,
-        opacity: 0.2
-      }, 
-      { 
-        duration: transitionDuration * 1.5,
-      }
-    )
-
-    setTimeout(() => {
-      window.location.href = href;
-    }, (transitionDuration * 1000) * 1.05 );
-  }
-
-  // Smooth scroll
   import Lenis from '@studio-freight/lenis';
 
   const lenis = new Lenis({ 
@@ -133,6 +76,72 @@ const menu = [
   }
 
   requestAnimationFrame(raf);
+
+  const links = document.querySelectorAll(".link");
+  const inner = document.querySelector('.inner');
+  const slider = document.querySelector('.slider');
+  const page = document.querySelector('.page');
+  const transitionDuration = 0.6;
+
+  inner.style.transform = "translateY(100px)";
+
+  window.addEventListener('load', () => {
+    animate(inner, {
+        opacity: [0, 1],
+        y: ["100px", "0px"]
+    }, {
+        duration: transitionDuration,
+        easing: [.88, .16, .15, .86]
+    });
+  });
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+    
+    links.forEach((link) => {
+      link.addEventListener("click", function(event) {
+        event.preventDefault(); // Prevent the default behavior of the anchor tag
+
+        // Store the href attribute value
+        const href = this.getAttribute("href");
+
+        // Stop the navigation to the current page
+        if ( href !== window.location.pathname ) {
+          transitionOut(href); // Trigger animation functon
+        }
+      });
+    });
+
+    function transitionOut(href) {
+      // Motion One animations here
+      animate(slider, 
+        {
+          top: "0"
+        },
+        {
+          duration: transitionDuration,
+          easing: [.88, .16, .15, .86]
+        })
+
+      animate(page, 
+        {
+          y: "-100px",
+          scale: 0.9,
+          opacity: 0.2
+        }, 
+        { 
+          duration: transitionDuration,
+        }
+      )
+
+      setTimeout(() => {
+        window.location.href = href;
+      }, (transitionDuration * 1000) * 1.05 );
+    }
+
+  });
+
+  
 
 </script>
 
@@ -170,6 +179,8 @@ const menu = [
   .page {
     background-color: white;
     width: 100%;
+    transform: translateY(0);
+    transform-origin: center top;
   }
 
   .slider {

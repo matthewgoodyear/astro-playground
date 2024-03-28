@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import image from '../../public/images/test.jpg';
+import { Image } from 'astro:assets';
+import image from '../images/test.jpg';
 
 ---
 <Base>
@@ -12,37 +13,37 @@ import image from '../../public/images/test.jpg';
     <div class="zoom-sticky">
       <div class="zoom-el">
         <div class="img-container">
-          <img class="img" src={image.src} alt="image">
+          <Image class:list="img" src={image} alt="Image" />
         </div>
       </div>
       <div class="zoom-el">
         <div class="img-container">
-          <img class="img" src={image.src} alt="image">
+          <Image class:list="img" src={image} alt="Image" />
         </div>
       </div>
       <div class="zoom-el">
         <div class="img-container">
-          <img class="img" src={image.src} alt="image">
+          <Image class:list="img" src={image} alt="Image" />
         </div>
       </div>
       <div class="zoom-el">
         <div class="img-container">
-          <img class="img" src={image.src} alt="image">
+          <Image class:list="img" src={image} alt="Image" />
         </div>
       </div>
       <div class="zoom-el">
         <div class="img-container">
-          <img class="img" src={image.src} alt="image">
+           <Image class:list="img" src={image} alt="Image" />
         </div>
       </div>
       <div class="zoom-el">
         <div class="img-container">
-          <img class="img" src={image.src} alt="image">
+           <Image class:list="img" src={image} alt="Image" />
         </div>
       </div>
       <div class="zoom-el">
         <div class="img-container">
-          <img class="img" src={image.src} alt="image">
+           <Image class:list="img" src={image} alt="Image" />
         </div>
       </div>
     </div>
@@ -63,12 +64,17 @@ import image from '../../public/images/test.jpg';
 
     const scaleStart = 1;
     const scaleEnd = scaleEndValues[i];
+    const img = element.querySelector('.img');
 
     scroll(animate(element, { scale: [scaleStart, scaleEnd ] }, { easing: "ease-out" }), {
       target: container,
       offset: [0.05, 0.7, 0.95 ],
     });
 
+    scroll(animate(img, { scale: [ 1.25, 1 ] }), {
+      target: container,
+      offset: [ 0, 1 ],
+    });
   });
 </script>
 
@@ -104,6 +110,7 @@ import image from '../../public/images/test.jpg';
         width: 25vw;
         height: 25vh;
         position: relative;
+        overflow: hidden;
       }
         .img {
           width: 100%;

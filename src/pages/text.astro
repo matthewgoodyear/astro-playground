@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base>
+  <div class="wrapper">
+    <h1>Text Animations</h1>
+
+    <section>
+      <div class="slide-up">
+        <h2>Slide up</h2>
+      </div>
+    </section>
+
+    <section>
+      <div class="slide-right">
+        <h2>Slide in</h2>
+      </div>
+    </section> 
+  </div>
+</Base>
+
+<style>
+  h2 {
+    text-align: center;
+    font-size: 6rem;
+    text-transform: uppercase;
+  }
+
+  section {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .slide-right,
+  .slide-up {
+    overflow: hidden;
+    width: 100%;
+    /* border: 1px solid red; */
+  }
+</style>
+
+<script>
+
+  // import { animate } from 'framer-motion';
+  import { inView, animate, spring, stagger } from "motion";
+
+  
+  const slideUp = document.querySelectorAll('.slide-up');
+  slideUp.forEach(element => {
+    const title = element.querySelector('h2');
+    const initial = 100;
+
+    title.style.transform = `translateX(${initial}%)`;
+
+    const properties = {
+      y: [`${initial}%`, "0%"]
+    }
+    const settings = {
+      easing: spring()
+    }
+
+    inView(element, () => { 
+      animate(title, properties, settings)
+    },
+    { margin: "-50%" })
+  });
+
+  const slideRight = document.querySelectorAll('.slide-right');
+  slideRight.forEach(element => {
+    const title = element.querySelector('h2');
+
+    const initial = -100;
+
+    title.style.transform = `translateX(${initial}%)`;
+
+    const properties = {
+      x: [`${initial}%`, "0%"]
+    }
+    const settings = {
+      easing: spring()
+    }
+
+    inView(element, () => { 
+      animate(title, properties, settings)
+    },
+    { margin: "-50%" })
+  });
+
+</script>
