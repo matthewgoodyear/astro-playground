@@ -23,6 +23,10 @@ const menu = [
   {
     link: "/astro-playground/text",
     name: "Text"
+  },
+  {
+    link: "/astro-playground/exits",
+    name: "Exits"
   }
 ]
 
@@ -82,66 +86,64 @@ const menu = [
   const slider = document.querySelector('.slider');
   const page = document.querySelector('.page');
   const transitionDuration = 0.6;
-
-  inner.style.transform = "translateY(100px)";
+  const currentHref = (window.location.pathname);
 
   window.addEventListener('load', () => {
-    animate(inner, {
-        opacity: [0, 1],
-        y: ["100px", "0px"]
-    }, {
+
+    // inner.style.top = "100px";
+
+    animate(inner, 
+      {
+          opacity: [0, 1],
+          // top: "0"
+      },
+      {
+          duration: transitionDuration,
+          // easing: [.88, .16, .15, .86]
+      }
+    )
+  });
+
+  links.forEach((link) => {
+    link.addEventListener("click", function(event) {
+      event.preventDefault(); // Prevent the default behavior of the anchor tag
+
+      // Store the href attribute value
+      const href = this.getAttribute("href");
+
+      // Stop the navigation to the current page
+      if ( href !== currentHref ) {
+        transitionOut(href); // Trigger animation functon
+      }
+    });
+  });
+
+  function transitionOut(href) {
+    animate(slider, 
+      {
+        top: "0"
+      },
+      {
         duration: transitionDuration,
         easing: [.88, .16, .15, .86]
-    });
-  });
+      })
 
+    animate(page, 
+      {
+        y: "-100px",
+        scale: 0.9,
+        opacity: 0.2
+      }, 
+      { 
+        duration: transitionDuration,
+      }
+    )
 
-  document.addEventListener("DOMContentLoaded", () => {
-    
-    links.forEach((link) => {
-      link.addEventListener("click", function(event) {
-        event.preventDefault(); // Prevent the default behavior of the anchor tag
+    setTimeout(() => {
+      window.location.href = href;
+    }, (transitionDuration * 1000) * 1.05 );
+  }
 
-        // Store the href attribute value
-        const href = this.getAttribute("href");
-
-        // Stop the navigation to the current page
-        if ( href !== window.location.pathname ) {
-          transitionOut(href); // Trigger animation functon
-        }
-      });
-    });
-
-    function transitionOut(href) {
-      // Motion One animations here
-      animate(slider, 
-        {
-          top: "0"
-        },
-        {
-          duration: transitionDuration,
-          easing: [.88, .16, .15, .86]
-        })
-
-      animate(page, 
-        {
-          y: "-100px",
-          scale: 0.9,
-          opacity: 0.2
-        }, 
-        { 
-          duration: transitionDuration,
-        }
-      )
-
-      setTimeout(() => {
-        window.location.href = href;
-      }, (transitionDuration * 1000) * 1.05 );
-    }
-
-  });
-
-  
 
 </script>
 
@@ -174,6 +176,7 @@ const menu = [
     display: flex;
     min-height: 100vh;
     opacity: 0;
+    position: relative;
   }
 
   .page {

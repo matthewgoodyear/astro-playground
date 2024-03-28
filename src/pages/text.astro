@@ -6,6 +6,12 @@ import Base from '../layouts/Base.astro';
     <h1>Text Animations</h1>
 
     <section>
+      <div class="split-type">
+        <h2 class="split">Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, suscipit.</h2>
+      </div>
+    </section> 
+
+    <section>
       <div class="slide-up">
         <h2>Slide up</h2>
       </div>
@@ -39,12 +45,18 @@ import Base from '../layouts/Base.astro';
     width: 100%;
     /* border: 1px solid red; */
   }
+
+  .split {
+    font-kerning: none;
+    font-size: 4rem;
+  }
 </style>
 
 <script>
 
   // import { animate } from 'framer-motion';
   import { inView, animate, spring, stagger } from "motion";
+  import SplitType from 'split-type';
 
   
   const slideUp = document.querySelectorAll('.slide-up');
@@ -87,5 +99,21 @@ import Base from '../layouts/Base.astro';
     },
     { margin: "-50%" })
   });
+
+
+  const textSplit = new SplitType('.split');
+
+  document.querySelectorAll('.line').forEach(element => {
+    (element as HTMLElement).style.overflow = "hidden";
+
+    element.querySelectorAll('.char').forEach(element => {
+      (element as HTMLElement).style.transform = "translateY(200px)";
+    });
+  });
+
+  inView(".split-type", () => {
+    animate(textSplit.chars, { y: [200, 0] }, { delay: stagger(0.015), duration: 0.8 }).finished.then(() => { textSplit.revert() })
+  }, { margin: "-25%" })
+
 
 </script>

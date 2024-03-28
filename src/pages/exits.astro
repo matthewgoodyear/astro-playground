@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base>
+  <div class="wrapper">
+    <h1>Exit Transitions</h1>
+    
+    <div class="cluster">
+      <a href="/astro-playground/exits" id="exit-1" data-page="We're moving">Exit One</a>
+    </div>
+  </div>
+</Base>
+
+<div id="exit-1__slider">
+  <p id="target">NEW PAGE TITLE</p>
+</div>
+
+<script>
+  import { animate, stagger } from 'motion';
+  import SplitType from 'split-type';
+  
+  document.getElementById('exit-1').addEventListener("click", function(event) {
+    event.preventDefault();
+    const href = this.getAttribute("href");
+    const slider =  document.getElementById('exit-1__slider');
+    const text =  slider.querySelector('p');
+
+    const textSplit = new SplitType('#target');
+
+    document.querySelectorAll('.line').forEach(element => {
+      (element as HTMLElement).style.overflow = "hidden";
+    });
+
+    animate(slider,
+      { top: "0" },
+      { duration: 0.7, easing: [.88, .16, .15, .86] }
+    ).finished.then(() => {
+      animate(slider, 
+        { top: "-100vh" }, { delay: 1, easing: [.88, .16, .15, .86], duration: 0.7 }
+      ).finished.then(() => { slider.style.top = "100vh" })
+    })
+
+    animate(textSplit.chars, 
+      { y: [100, 0] }, { delay: stagger(0.02, { start: 0.5 }), duration: 0.6 }
+    )
+  });
+
+</script>
+
+<style>
+  #exit-1__slider {
+    position: fixed;
+    top: 100vh;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  #exit-1__slider p {
+    font-size: 3rem;
+    /* opacity: 0; */
+  }
+
+  .cluster {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+</style>
