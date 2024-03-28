@@ -37,12 +37,12 @@ import Base from '../layouts/Base.astro';
       { duration: 0.7, easing: [.88, .16, .15, .86] }
     ).finished.then(() => {
       animate(slider, 
-        { top: "-100vh" }, { delay: 1, easing: [.88, .16, .15, .86], duration: 0.7 }
+        { top: "-100vh" }, { delay: 0.6, easing: [.74,0,.45,.97], duration: 0.7 }
       ).finished.then(() => { slider.style.top = "100vh" })
     })
 
     animate(textSplit.chars, 
-      { y: [100, 0] }, { delay: stagger(0.02, { start: 0.5 }), duration: 0.6 }
+      { y: [100, 0] }, { delay: stagger(0.02, { start: 0.4 }), duration: 0.6 }
     )
   });
 

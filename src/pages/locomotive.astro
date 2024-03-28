@@ -1,0 +1,91 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import image from '../images/test.jpg';
+import '../styles/locomotive.css';
+---
+<Base>
+  <div class="wrapper">
+    <h1>Locomotive Scroll</h1>
+
+    <section class="boxes">
+      <div class="box" data-scroll data-scroll-speed="-0.2"></div>
+      <div class="box" data-scroll data-scroll-speed="0.2"></div>
+    </section>
+
+    <section class="parallax">
+      <h1 data-scroll data-scroll-speed="0.5">Parallax text</h1>
+
+      <p data-scroll data-scroll-speed="0.2" data-scroll-position="start, end">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Facere excepturi sit quaerat eum! Vero, officia soluta magni in consequatur et.</p>
+
+      <div class="parallax-container">
+        <div class="img-container" data-scroll data-scroll-speed="-0.05">
+          <img class="img" src="src/images/test.jpg" alt="">
+        </div>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  section {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  .box {
+    width: 200px;
+    height: 200px;
+    background-color: blue;
+  }
+
+  .parallax h1 {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    color: red;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 5rem;
+  }
+
+  .parallax p {
+    position: absolute;
+    width: 35ch;
+    right: 0;
+    top: 0;
+  }
+
+  .parallax-container {
+    position: relative;
+    width: 600px;
+    height: 400px;
+    /* border: 1px solid red; */
+    overflow: hidden;
+  }
+
+  .img-container {
+    position: absolute;
+    top: -10%;
+    width: 100%;
+    height: 120%;
+  }
+    .img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+</style>
+
+<script>
+  import LocomotiveScroll from 'locomotive-scroll';
+
+  const locomotiveScroll = new LocomotiveScroll({
+    lenisOptions: {
+      lerp: 0.12
+    }
+  });
+</script>
