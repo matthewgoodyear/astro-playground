@@ -1,0 +1,76 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base>
+  <div class="wrapper">
+    <h1>Image Slider on Scroll</h1>
+  </div>
+
+  <div class="sliding-images">
+    <div class="slider-1">
+      <div class="img-container"></div>
+      <div class="img-container"></div>
+      <div class="img-container"></div>
+      <div class="img-container"></div>
+    </div>
+
+    <div class="slider-2">
+      <div class="img-container"></div>
+      <div class="img-container"></div>
+      <div class="img-container"></div>
+      <div class="img-container"></div>
+    </div>
+  </div>
+</Base>
+
+<style>
+
+  .sliding-images {
+    display: flex;
+    margin-block: 100vh;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .slider-1, .slider-2 {
+    position: relative;
+    display: flex;
+    gap: 2rem;
+    width: 120vw;
+    left: -10vw;
+  }
+
+  .img-container {
+    flex: 1;
+    aspect-ratio: 3 / 2;
+    background-color: grey;
+  }
+</style>
+
+<script>
+
+  import { animate, scroll } from "motion";
+
+  const container = document.querySelector('.sliding-images');
+  const sliderOne = document.querySelector('.slider-1');
+  const sliderTwo = document.querySelector('.slider-2');
+
+
+  const animation = (amount) => [
+    {
+      x: amount
+    },
+  ]
+
+  scroll(animate(sliderOne, ...animation("10vw")), {
+    target: container,
+    offset: ["start end", "end start"]
+  });
+
+  scroll(animate(sliderTwo, ...animation("-10vw")), {
+    target: container,
+    offset: ["start end", "end start"]
+  });
+
+
+</script>
